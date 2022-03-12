@@ -1,4 +1,5 @@
 import { Composer, Context, LazySessionFlavor, MiddlewareFn, MiddlewareObj } from 'grammy';
+import { Step } from './step';
 import { Workflow } from './workflow';
 
 type WorkflowSession = {
@@ -13,9 +14,17 @@ export type WorkflowFlavor = LazySessionFlavor<WorkflowSession>;
 
 export class WorkflowEngine<C extends Context & WorkflowFlavor> implements MiddlewareObj<C> {
     private registeredWorkflows: Map<string, Workflow<C, any>>;
+    private static _instance: WorkflowEngine<any>;
 
-    constructor() {
+    private constructor() {
         this.registeredWorkflows = new Map();
+    }
+
+    static getInstance<C extends Context & WorkflowFlavor>(): WorkflowEngine<C> {
+        if (this._instance === undefined) {
+            this._instance = new WorkflowEngine<C>();
+        }
+        return this._instance;
     }
 
     registerWorkflow(workflow: Workflow<C, any>) {
@@ -35,6 +44,9 @@ export class WorkflowEngine<C extends Context & WorkflowFlavor> implements Middl
 
         session.grammyWorkflow.currentStep = stepName;
         session.grammyWorkflow.currentWorkflow = workflowName;
+
+        const step = await this._instance.getCurrentStep(ctx);
+        await step.onEntry(ctx);
     }
 
     static async end<C extends Context & WorkflowFlavor>(ctx: C) {
@@ -66,18 +78,18 @@ export class WorkflowEngine<C extends Context & WorkflowFlavor> implements Middl
         }
     }
 
-    private async getCurrentStep(ctx: C): Promise<Composer<C>> {
+    private async getCurrentStep(ctx: C): Promise<Step<C>> {
         const session = await ctx.session;
         const currentWorkflow = session.grammyWorkflow.currentWorkflow;
 
         if (currentWorkflow === null) {
-            return new Composer();
+            return new Step("unknown");
         }
 
         const workflow = this.registeredWorkflows.get(currentWorkflow);
 
         if (workflow === undefined) {
-            return new Composer();
+            return new Step("unknown");
         }
 
         return workflow.getCurrentStep(ctx);

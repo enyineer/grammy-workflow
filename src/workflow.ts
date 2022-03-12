@@ -1,10 +1,10 @@
-import { Composer, Context } from 'grammy'
-import { StatelessStep } from './statelessStep';
+import { Context } from 'grammy'
+import { Step } from './step';
 import { StatefulStep } from './statefulStep'
 import { WorkflowFlavor } from './workflowEngine';
 
 export abstract class Workflow<C extends Context & WorkflowFlavor, T> {
-    private registeredSteps: Map<string, StatelessStep<C>>;
+    private registeredSteps: Map<string, Step<C>>;
     private _workflowName: string;
     private initialData: T;
 
@@ -14,25 +14,25 @@ export abstract class Workflow<C extends Context & WorkflowFlavor, T> {
         this.initialData = initialData;
     }
 
-    registerStep(step: StatelessStep<C> | StatefulStep<C, T>) {
+    registerStep(step: Step<C> | StatefulStep<C, T>) {
         if (this.registeredSteps.has(step.stepName)) {
             throw new Error(`Can not define multiple steps with the same name: ${step.stepName}`);
         }
         this.registeredSteps.set(step.stepName, step);
     }
 
-    async getCurrentStep(ctx: C): Promise<Composer<C>> {
+    async getCurrentStep(ctx: C): Promise<Step<C>> {
         const session = await ctx.session;
         const currentStep = session.grammyWorkflow.currentStep;
 
         if (currentStep === null) {
-            return new Composer();
+            return new Step("unknown");
         }
 
         const step = this.registeredSteps.get(currentStep);
 
         if (step === undefined) {
-            return new Composer();
+            return new Step("unknown");
         }
 
         // Check whether workflowData has been initialized for this specific session

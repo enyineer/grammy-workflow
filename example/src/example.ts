@@ -30,7 +30,7 @@ bot.command("echo", async (ctx, next) => {
     next();
 });
 
-const workflowEngine = new WorkflowEngine();
+const workflowEngine = WorkflowEngine.getInstance();
 const exampleWorkflow = new ExampleWorkflow();
 workflowEngine.registerWorkflow(exampleWorkflow);
 
