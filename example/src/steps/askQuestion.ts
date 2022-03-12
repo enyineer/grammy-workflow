@@ -23,6 +23,8 @@ export class AskQuestionStep<T extends StepData> extends StatefulStep<MyContext,
 
     setup() {
         this.on("message:text", this.messageHandler);
+        // You can even define multiple different update types in one Step!
+        this.on("message:location", this.locationHandler);
     }
 
     private messageHandler = async (ctx: Filter<MyContext, "message:text">) => {
@@ -36,5 +38,11 @@ export class AskQuestionStep<T extends StepData> extends StatefulStep<MyContext,
         await ctx.reply("Are you sure you want this text to be echoed?", { reply_markup: { keyboard }});
 
         await WorkflowEngine.next(ctx, ExampleWorkflow.WORKFLOW_NAME, EchoTextStep.STEP_NAME);
+    }
+
+    private locationHandler = async (ctx: Filter<MyContext, "message:location">) => {
+        await ctx.reply("Sorry, I can not echo locations :-( Please send me a text message!");
+        // If we don't call WorkflowEngine.end(...) or WorkflowEngine.next(...) we stay inside
+        // the current workflow and step for the next update.
     }
 }

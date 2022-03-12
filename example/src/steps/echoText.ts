@@ -32,7 +32,8 @@ export class EchoTextStep<T extends StepData> extends StatefulStep<MyContext, T>
             WorkflowEngine.end(ctx);
         } else {
             await ctx.reply("I couldn't recognize your answer. Please use the keyboard.");
-            // If we don't call WorkflowEngine.end(...) or WorkflowEngine.next(...) we stay inside current workflow and step
+            // If we don't call WorkflowEngine.end(...) or WorkflowEngine.next(...) we stay inside
+            // the current workflow and step for the next update.
         }
     }
 }
