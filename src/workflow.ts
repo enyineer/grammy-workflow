@@ -50,7 +50,7 @@ export abstract class Workflow<C extends Context & WorkflowFlavor, T> {
         const dataFromCurrentWorkflow = workflowData.get(this._workflowName);
 
         if (dataFromCurrentWorkflow === undefined) {
-            session.grammyWorkflow.workflowData.set(this._workflowName, this.initialData);
+            session.grammyWorkflow.workflowData[this._workflowName] = this.initialData;
         }
     }
 }

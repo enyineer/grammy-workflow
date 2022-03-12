@@ -11,7 +11,7 @@ export abstract class StatefulStep<C extends Context & WorkflowFlavor, T> extend
             throw new Error("Tried getting workflowData while no currentWorkflow is defined.");
         }
 
-        return session.grammyWorkflow.workflowData.get(currentWorkflow);
+        return session.grammyWorkflow.workflowData[currentWorkflow];
     }
 
     protected async setWorkflowData(ctx: C, data: T): Promise<void> {
@@ -22,6 +22,6 @@ export abstract class StatefulStep<C extends Context & WorkflowFlavor, T> extend
             throw new Error("Tried setting workflowData while no currentWorkflow is defined.");
         }
 
-        session.grammyWorkflow.workflowData.set(currentWorkflow, data);
+        session.grammyWorkflow.workflowData[currentWorkflow] = data;
     }
 }
