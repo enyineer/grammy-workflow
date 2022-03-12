@@ -1,7 +1,7 @@
 # grammy-workflow 👨‍🔧
 > *Redefining the way you work with Grammy.*
 
-This Package tries to provide a more convenient way to work with complex workflows when using Grammy to program Telegram bots.
+This plugin tries to provide a more convenient way to work with complex workflows when using Grammy to program Telegram bots.
 
 There is a good starting point when working with Grammy and using the router-Plugin. We had the need to take that step a bit further and create a WorkflowEngine that is a little more opinionated in how you define Workflows and it's steps (Routes). We also added a convenient way to have the typings for every step and workflow defined.
 
