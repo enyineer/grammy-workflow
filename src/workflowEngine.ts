@@ -6,7 +6,7 @@ type WorkflowSession = {
     grammyWorkflow: {
         currentWorkflow: string | null;
         currentStep: string | null;
-        workflowData: Map<string, any>
+        workflowData: { [key: string]: any }
     }
 }
 
@@ -37,10 +37,6 @@ export class WorkflowEngine<C extends Context & WorkflowFlavor> implements Middl
 
     static async next<C extends Context & WorkflowFlavor>(ctx: C, workflowName: string, stepName: string) {
         const session = await ctx.session;
-
-        if (session.grammyWorkflow === undefined) {
-            await WorkflowEngine.setupWorkflowSession<C>(ctx);
-        }
 
         session.grammyWorkflow.currentStep = stepName;
         session.grammyWorkflow.currentWorkflow = workflowName;
@@ -95,7 +91,7 @@ export class WorkflowEngine<C extends Context & WorkflowFlavor> implements Middl
         session.grammyWorkflow = {
             currentStep: null,
             currentWorkflow: null,
-            workflowData: new Map()
+            workflowData: {}
         }
     }
 
