@@ -9,9 +9,9 @@ type WorkflowSession = {
     }
 }
 
-export type WorkflowFlavour = LazySessionFlavor<WorkflowSession>;
+export type WorkflowFlavor = LazySessionFlavor<WorkflowSession>;
 
-export class WorkflowEngine<C extends Context & WorkflowFlavour> implements MiddlewareObj<C> {
+export class WorkflowEngine<C extends Context & WorkflowFlavor> implements MiddlewareObj<C> {
     private registeredWorkflows: Map<string, Workflow<C, any>>;
 
     constructor() {
@@ -26,7 +26,7 @@ export class WorkflowEngine<C extends Context & WorkflowFlavour> implements Midd
 
     }
 
-    static async next<C extends Context & WorkflowFlavour>(ctx: C, workflowName: string, stepName: string) {
+    static async next<C extends Context & WorkflowFlavor>(ctx: C, workflowName: string, stepName: string) {
         const session = await ctx.session;
 
         if (session.grammyWorkflow === undefined) {
@@ -37,7 +37,7 @@ export class WorkflowEngine<C extends Context & WorkflowFlavour> implements Midd
         session.grammyWorkflow.currentWorkflow = workflowName;
     }
 
-    static async end<C extends Context & WorkflowFlavour>(ctx: C) {
+    static async end<C extends Context & WorkflowFlavor>(ctx: C) {
         const session = await ctx.session;
         session.grammyWorkflow.currentStep = null;
         session.grammyWorkflow.currentWorkflow = null;
@@ -57,7 +57,7 @@ export class WorkflowEngine<C extends Context & WorkflowFlavour> implements Midd
             .middleware()
     }
 
-    private static async setupWorkflowSession<C extends Context & WorkflowFlavour>(ctx: C) {
+    private static async setupWorkflowSession<C extends Context & WorkflowFlavor>(ctx: C) {
         const session = await ctx.session;
         session.grammyWorkflow = {
             currentStep: null,
