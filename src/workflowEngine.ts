@@ -58,6 +58,11 @@ export class WorkflowEngine<C extends Context & WorkflowFlavor> implements Middl
 
     static async end<C extends Context & WorkflowFlavor>(ctx: C) {
         const session = await ctx.session;
+        const currentWorkflow = session.grammyWorkflow.currentWorkflow;
+
+        if (currentWorkflow !== null) {
+            delete session.grammyWorkflow.workflowData[currentWorkflow];
+        }
         session.grammyWorkflow.currentStep = null;
         session.grammyWorkflow.currentWorkflow = null;
     }
