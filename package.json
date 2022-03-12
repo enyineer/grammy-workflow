@@ -15,8 +15,7 @@
         "url": "https://github.com/enyineer/grammy-workflow/issues"
     },
     "scripts": {
-        "build": "rimraf dist && deno2node tsconfig.json",
-        "release": "npm run build && npm publish --access public"
+        "build": "rimraf dist && deno2node tsconfig.json"
     },
     "peerDependencies": {
         "grammy": "^1.7.0"
