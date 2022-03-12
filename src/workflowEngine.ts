@@ -38,6 +38,10 @@ export class WorkflowEngine<C extends Context & WorkflowFlavor> implements Middl
     static async next<C extends Context & WorkflowFlavor>(ctx: C, workflowName: string, stepName: string) {
         const session = await ctx.session;
 
+        if (session.grammyWorkflow === undefined) {
+            await WorkflowEngine.setupWorkflowSession<C>(ctx);
+        }
+
         session.grammyWorkflow.currentStep = stepName;
         session.grammyWorkflow.currentWorkflow = workflowName;
 
@@ -58,6 +62,11 @@ export class WorkflowEngine<C extends Context & WorkflowFlavor> implements Middl
 
     static async end<C extends Context & WorkflowFlavor>(ctx: C) {
         const session = await ctx.session;
+
+        if (session.grammyWorkflow === undefined) {
+            await WorkflowEngine.setupWorkflowSession<C>(ctx);
+        }
+
         const currentWorkflow = session.grammyWorkflow.currentWorkflow;
 
         if (currentWorkflow !== null) {
