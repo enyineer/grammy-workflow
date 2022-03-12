@@ -5,13 +5,13 @@ import { ExampleWorkflow } from '../workflows/exampleWorkflow';
 import { EchoTextStep } from './echoText';
 
 // Define the data that is needed in this step
-type StepData = {
+export type AskQuestionStepData = {
     text: string;
 }
 
 // Make sure to get a generic here that extends your steps needed data
 // This helps you to keep your types safe
-export class AskQuestionStep<T extends StepData> extends StatefulStep<MyContext, T> {
+export class AskQuestionStep<T extends AskQuestionStepData> extends StatefulStep<MyContext, T> {
     // We recommend that you always define a public static Constant for your Step name so that you can
     // reference it from the steps when jumping between steps.
     static readonly STEP_NAME = "AskQuestion";

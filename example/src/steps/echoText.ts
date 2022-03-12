@@ -3,12 +3,12 @@ import { Filter } from 'grammy';
 import { MyContext } from '../example';
 
 // Define the data that is needed in this step
-type StepData = {
+export type EchoTextStepData = {
     text: string;
 }
 
 // We set any as WorkflowData type here because we don't access any data in this step
-export class EchoTextStep<T extends StepData> extends StatefulStep<MyContext, T> {
+export class EchoTextStep<T extends EchoTextStepData> extends StatefulStep<MyContext, T> {
     // We recommend that you always define a public static Constant for your Step name so that you can
     // reference it from the steps when jumping between steps.
     static readonly STEP_NAME = "EchoText";
