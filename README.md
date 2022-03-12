@@ -19,6 +19,16 @@ A workflow itself is a defined amount of Steps that are available in this specif
 > Remember: Steps are always reusable! You can have common steps for multiple workflows that do get reused 😏
 
 # Getting Started
+## Install
+```
+npm install --save @enyineer/grammy-workflow
+
+or
+
+yarn add @enyineer/grammy-workflow
+```
+
+## How does this plugin work?
 For me the best way to get started is to just look at an example. We provided a fully working example bot in the [example folder](https://github.com/enyineer/grammy-workflow/tree/main/example).
 
 You should specifically look at the [example workflow](https://github.com/enyineer/grammy-workflow/blob/main/example/src/example.ts) and the [example steps](https://github.com/enyineer/grammy-workflow/tree/main/example/src/steps).
