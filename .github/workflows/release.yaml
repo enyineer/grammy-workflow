@@ -10,15 +10,21 @@ jobs:
                   node-version: 16
             - run: npm install
             - run: npm run build
+            - uses: actions/upload-artifact@v3
+              with:
+                name: build-artifact
+                path: |
+                  dist/
+                  package.json
     publish:
+        needs: build
         if: github.ref == 'refs/heads/main'
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v1
-            - uses: actions/setup-node@v1
+            - uses: actions/download-artifact@v3
               with:
-                  node-version: 16
-            - run: npm install
+                name: build-artifact
+                path: /
             - uses: JS-DevTools/npm-publish@v1
               with:
                   token: ${{ secrets.NPM_TOKEN }}
