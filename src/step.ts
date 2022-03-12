@@ -1,11 +1,11 @@
 import { Composer, Context } from 'grammy';
 import { WorkflowFlavor } from './workflowEngine';
 
-export type SimpleHandler = (ctx: Context & WorkflowFlavor) => Promise<unknown> | unknown;
+export type MaybePromise<T> = Promise<T> | T;
 
 export class Step<C extends Context & WorkflowFlavor> extends Composer<C> {
     private _stepName: string;
-    private _onEntryHandler: SimpleHandler;
+    private _onEntryHandler: (ctx: C) => MaybePromise<any>;
 
     constructor(stepName: string) {
         super();
@@ -17,11 +17,11 @@ export class Step<C extends Context & WorkflowFlavor> extends Composer<C> {
         return this._stepName;
     }
 
-    set onEntry(handler: SimpleHandler) {
+    set onEntry(handler: (ctx: C) => MaybePromise<any>) {
         this._onEntryHandler = handler;
     }
 
-    get onEntry(): SimpleHandler {
+    get onEntry(): (ctx: C) => MaybePromise<any> {
         return this._onEntryHandler;
     }
 }
