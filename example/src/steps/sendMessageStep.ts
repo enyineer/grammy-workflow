@@ -4,8 +4,6 @@ import { MyContext } from '../example';
 import { ExampleWorkflow } from '../workflows/exampleWorkflow';
 import { AskQuestionStep } from './askQuestion';
 
-// Make sure to get a generic here that extends your steps needed data
-// This helps you to keep your types safe
 export class SendMessageStep extends StatelessStep<MyContext> {
     // We recommend that you always define a public static Constant for your Step name so that you can
     // reference it from the steps when jumping between steps.
