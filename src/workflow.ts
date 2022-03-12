@@ -47,7 +47,7 @@ export abstract class Workflow<C extends Context & WorkflowFlavor, T> {
     private async setupWorkflowData(ctx: C): Promise<void> {
         const session = await ctx.session;
         const workflowData = session.grammyWorkflow.workflowData;
-        const dataFromCurrentWorkflow = workflowData.get(this._workflowName);
+        const dataFromCurrentWorkflow = workflowData[this._workflowName];
 
         if (dataFromCurrentWorkflow === undefined) {
             session.grammyWorkflow.workflowData[this._workflowName] = this.initialData;
