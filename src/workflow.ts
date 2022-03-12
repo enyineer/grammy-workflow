@@ -1,9 +1,10 @@
 import { Composer, Context } from 'grammy'
-import { Step } from './step'
+import { StatelessStep } from './statelessStep';
+import { StatefulStep } from './statefulStep'
 import { WorkflowFlavour } from './workflowEngine';
 
-export class Workflow<C extends Context & WorkflowFlavour, T> {
-    private registeredSteps: Map<string, Step<C>>;
+export abstract class Workflow<C extends Context & WorkflowFlavour, T> {
+    private registeredSteps: Map<string, StatelessStep<C>>;
     private _workflowName: string;
     private initialData: T;
 
@@ -13,7 +14,7 @@ export class Workflow<C extends Context & WorkflowFlavour, T> {
         this.initialData = initialData;
     }
 
-    registerStep(step: Step<C>) {
+    registerStep(step: StatelessStep<C> | StatefulStep<C, T>) {
         if (this.registeredSteps.has(step.stepName)) {
             throw new Error(`Can not define multiple steps with the same name: ${step.stepName}`);
         }
@@ -38,28 +39,6 @@ export class Workflow<C extends Context & WorkflowFlavour, T> {
         await this.setupWorkflowData(ctx);
 
         return step;
-    }
-
-    static async getWorkflowData<C extends Context & WorkflowFlavour, T>(ctx: C): Promise<T | null> {
-        const session = await ctx.session;
-        const currentWorkflow = session.grammyWorkflow.currentWorkflow;
-
-        if (currentWorkflow === null) {
-            return null;
-        }
-
-        return session.grammyWorkflow.workflowData.get(currentWorkflow);
-    }
-
-    static async setWorkflowData<C extends Context & WorkflowFlavour, T>(ctx: C, data: T): Promise<void> {
-        const session = await ctx.session;
-        const currentWorkflow = session.grammyWorkflow.currentWorkflow;
-
-        if (currentWorkflow === null) {
-            return;
-        }
-
-        session.grammyWorkflow.workflowData.set(currentWorkflow, data);
     }
 
     get workflowName(): string {

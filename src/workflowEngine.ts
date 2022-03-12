@@ -28,8 +28,19 @@ export class WorkflowEngine<C extends Context & WorkflowFlavour> implements Midd
 
     static async next<C extends Context & WorkflowFlavour>(ctx: C, workflowName: string, stepName: string) {
         const session = await ctx.session;
+
+        if (session.grammyWorkflow === undefined) {
+            await WorkflowEngine.setupWorkflowSession<C>(ctx);
+        }
+
         session.grammyWorkflow.currentStep = stepName;
         session.grammyWorkflow.currentWorkflow = workflowName;
+    }
+
+    static async end<C extends Context & WorkflowFlavour>(ctx: C) {
+        const session = await ctx.session;
+        session.grammyWorkflow.currentStep = null;
+        session.grammyWorkflow.currentWorkflow = null;
     }
 
     middleware(): MiddlewareFn<C> {
@@ -38,7 +49,7 @@ export class WorkflowEngine<C extends Context & WorkflowFlavour> implements Midd
                 const session = await ctx.session;
 
                 if (session.grammyWorkflow === undefined) {
-                    await this.setupWorkflowSession(ctx);
+                    await WorkflowEngine.setupWorkflowSession<C>(ctx);
                 }
 
                 return await this.getCurrentStep(ctx);
@@ -46,7 +57,7 @@ export class WorkflowEngine<C extends Context & WorkflowFlavour> implements Midd
             .middleware()
     }
 
-    private async setupWorkflowSession(ctx: C) {
+    private static async setupWorkflowSession<C extends Context & WorkflowFlavour>(ctx: C) {
         const session = await ctx.session;
         session.grammyWorkflow = {
             currentStep: null,

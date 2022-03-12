@@ -1,7 +1,7 @@
 import { Composer, Context } from 'grammy';
 import { WorkflowFlavour } from './workflowEngine';
 
-export abstract class Step<C extends Context & WorkflowFlavour> extends Composer<C> {
+export class StatelessStep<C extends Context & WorkflowFlavour> extends Composer<C> {
     private _stepName: string;
 
     constructor(stepName: string) {
