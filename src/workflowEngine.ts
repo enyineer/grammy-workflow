@@ -49,6 +49,18 @@ export class WorkflowEngine<C extends Context & WorkflowFlavor> implements Middl
         await step.onEntry(ctx);
     }
 
+    // Switches to the step in the current workflow
+    static async nextInCurrentWorkflow<C extends Context & WorkflowFlavor>(ctx: C, stepName: string) {
+        const session = await ctx.session;
+        const currentWorkflow = session.grammyWorkflow.currentWorkflow;
+
+        if (currentWorkflow === null) {
+            throw new Error(`The current workflow is not set. Can not navigate to ${stepName}`);
+        }
+
+        return this.next(ctx, currentWorkflow, stepName);
+    }
+
     static async end<C extends Context & WorkflowFlavor>(ctx: C) {
         const session = await ctx.session;
         session.grammyWorkflow.currentStep = null;
