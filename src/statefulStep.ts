@@ -1,8 +1,8 @@
 import { Context } from 'grammy';
 import { StatelessStep } from './statelessStep';
-import { WorkflowFlavour } from './workflowEngine';
+import { WorkflowFlavor } from './workflowEngine';
 
-export abstract class StatefulStep<C extends Context & WorkflowFlavour, T> extends StatelessStep<C> {
+export abstract class StatefulStep<C extends Context & WorkflowFlavor, T> extends StatelessStep<C> {
     protected async getWorkflowData(ctx: C): Promise<T> {
         const session = await ctx.session;
         const currentWorkflow = session.grammyWorkflow.currentWorkflow;

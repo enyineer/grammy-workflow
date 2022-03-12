@@ -1,9 +1,9 @@
 import { Composer, Context } from 'grammy'
 import { StatelessStep } from './statelessStep';
 import { StatefulStep } from './statefulStep'
-import { WorkflowFlavour } from './workflowEngine';
+import { WorkflowFlavor } from './workflowEngine';
 
-export abstract class Workflow<C extends Context & WorkflowFlavour, T> {
+export abstract class Workflow<C extends Context & WorkflowFlavor, T> {
     private registeredSteps: Map<string, StatelessStep<C>>;
     private _workflowName: string;
     private initialData: T;
