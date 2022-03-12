@@ -22,9 +22,17 @@ export class AskQuestionStep<T extends StepData> extends StatefulStep<MyContext,
     }
 
     setup() {
+        // You can define entry steps that are called as soon WorkflowEngine.next(...) sets
+        // this as the next step!
+        this.onEntry = this.onEntryHandler;
+        // Define an update type you'd like to listen for
         this.on("message:text", this.messageHandler);
         // You can even define multiple different update types in one Step!
         this.on("message:location", this.locationHandler);
+    }
+
+    private onEntryHandler = async (ctx: MyContext) => {
+        await ctx.reply("Please send me a message that I'll echo to you!");
     }
 
     private messageHandler = async (ctx: Filter<MyContext, "message:text">) => {
