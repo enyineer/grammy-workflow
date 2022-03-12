@@ -1,7 +1,7 @@
 import { Context } from 'grammy'
 import { Step } from './step';
 import { StatefulStep } from './statefulStep'
-import { WorkflowFlavor } from './workflowEngine';
+import { WorkflowEngine, WorkflowFlavor } from './workflowEngine';
 
 export abstract class Workflow<C extends Context & WorkflowFlavor, T> {
     private registeredSteps: Map<string, Step<C>>;
@@ -22,8 +22,7 @@ export abstract class Workflow<C extends Context & WorkflowFlavor, T> {
     }
 
     async getCurrentStep(ctx: C): Promise<Step<C>> {
-        const session = await ctx.session;
-        const currentStep = session.grammyWorkflow.currentStep;
+        const currentStep = await WorkflowEngine.getCurrentStepName(ctx);
 
         if (currentStep === null) {
             return new Step("unknown");

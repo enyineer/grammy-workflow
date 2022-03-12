@@ -67,6 +67,16 @@ export class WorkflowEngine<C extends Context & WorkflowFlavor> implements Middl
         session.grammyWorkflow.currentWorkflow = null;
     }
 
+    static async getCurrentWorkflowName<C extends Context & WorkflowFlavor>(ctx: C): Promise<string | null> {
+        const session = await ctx.session;
+        return session.grammyWorkflow.currentWorkflow;
+    }
+
+    static async getCurrentStepName<C extends Context & WorkflowFlavor>(ctx: C): Promise<string | null> {
+        const session = await ctx.session;
+        return session.grammyWorkflow.currentStep;
+    }
+
     middleware(): MiddlewareFn<C> {
         return new Composer<C>()
             .lazy(async (ctx) => {
@@ -91,8 +101,7 @@ export class WorkflowEngine<C extends Context & WorkflowFlavor> implements Middl
     }
 
     private async getCurrentStep(ctx: C): Promise<Step<C>> {
-        const session = await ctx.session;
-        const currentWorkflow = session.grammyWorkflow.currentWorkflow;
+        const currentWorkflow = await WorkflowEngine.getCurrentWorkflowName(ctx);
 
         if (currentWorkflow === null) {
             return new Step("unknown");
